@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class Task:
@@ -8,4 +9,4 @@ class Task:
     done: bool
     description: str
     subject_id: int
-    due_date: optional[str] = None
+    due_date: Optional[str] = None
