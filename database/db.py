@@ -13,6 +13,6 @@ def init_db():
     cur = con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS subjects (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)")
     cur.execute("CREATE TABLE IF NOT EXISTS " \
-    "tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, subject_id INTEGER, description TEXT NOT NULL,done INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(subject_id) REFERENCES subjects(id))")
+    "tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, subject_id INTEGER, description TEXT NOT NULL,done INTEGER NOT NULL DEFAULT 0, due_date TEXT, FOREIGN KEY(subject_id) REFERENCES subjects(id))")
     con.commit()
     return con

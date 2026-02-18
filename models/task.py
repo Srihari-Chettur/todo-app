@@ -8,3 +8,4 @@ class Task:
     done: bool
     description: str
     subject_id: int
+    due_date: optional[str] = None
