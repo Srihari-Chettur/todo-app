@@ -32,14 +32,25 @@ def add_task(subject_id, description, due_date=None):
     con.commit()
     con.close()
 
-def get_tasks_by_subject(subject_id):
+def get_tasks_by_subject(subject_id, filter_done=None):
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT id, description, done, due_date FROM tasks WHERE subject_id = ?", (subject_id,))
+    
+    query = "SELECT id, description, done, due_date FROM tasks WHERE subject_id = ?"
+    params = [subject_id]
+    
+    # Add filter if specified
+    if filter_done is not None:
+        query += " AND done = ?"
+        params.append(1 if filter_done else 0)
+    
+    # Always sort by due_date
+    query += " ORDER BY due_date"
+    
+    cur.execute(query, params)
     rows = cur.fetchall()
     con.close()
-    return [Task(id=row[0], title="", subject_id=subject_id, done=bool(row[2]), description=row[1], due_date=row[3]) for row in rows]                   
-
+    return [Task(id=row[0], subject_id=subject_id, description=row[1], done=bool(row[2]), due_date=row[3]) for row in rows]
 def toggle_task_done(task_id):
     con = get_db_connection()
     cur = con.cursor()

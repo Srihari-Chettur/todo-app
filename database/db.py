@@ -6,9 +6,9 @@ def get_db_connection():
     db_path = os.path.join(BASE_DIR, "todo.db")
     return sqlite3.connect(db_path)
 
-def init_db():
+def init_db(db_name="todo.db"):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(BASE_DIR, "todo.db")
+    db_path = os.path.join(BASE_DIR, db_name)
     con = sqlite3.connect(db_path)
     cur = con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS subjects (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)")
