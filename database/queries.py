@@ -2,41 +2,41 @@ from models.subject import Subject
 from database.db import get_db_connection
 from models.task import Task
 
-def add_subject(name):
-    con = get_db_connection()
+def add_subject(name, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     cur.execute("INSERT INTO subjects (name) VALUES (?)", (name,))
     con.commit()
     con.close()
 
-def get_all_subjects():
-    con = get_db_connection()
+def get_all_subjects(db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     cur.execute("SELECT id, name FROM subjects")
     rows = cur.fetchall()
     con.close()
     return [Subject(id=row[0], name=row[1]) for row in rows]
 
-def delete_subject(subject_id):
-    con = get_db_connection()
+def delete_subject(subject_id, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     cur.execute("DELETE FROM tasks WHERE subject_id = ?", (subject_id,))
     cur.execute("DELETE FROM subjects WHERE id = ?", (subject_id,))
     con.commit()
     con.close()
 
-def add_task(subject_id, description, due_date=None):
-    con = get_db_connection()
+def add_task(subject_id, title, due_date=None, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
-    cur.execute("INSERT INTO tasks (subject_id, description, done, due_date) VALUES (?, ?, 0, ?)", (subject_id, description, due_date))
+    cur.execute("INSERT INTO tasks (subject_id, title, done, due_date) VALUES (?, ?, 0, ?)", (subject_id, title, due_date))
     con.commit()
     con.close()
 
-def get_tasks_by_subject(subject_id, filter_done=None):
-    con = get_db_connection()
+def get_tasks_by_subject(subject_id, filter_done=None, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     
-    query = "SELECT id, description, done, due_date FROM tasks WHERE subject_id = ?"
+    query = "SELECT id, title, done, due_date FROM tasks WHERE subject_id = ?"
     params = [subject_id]
     
     # Add filter if specified
@@ -50,9 +50,9 @@ def get_tasks_by_subject(subject_id, filter_done=None):
     cur.execute(query, params)
     rows = cur.fetchall()
     con.close()
-    return [Task(id=row[0], subject_id=subject_id, description=row[1], done=bool(row[2]), due_date=row[3]) for row in rows]
-def toggle_task_done(task_id):
-    con = get_db_connection()
+    return [Task(id=row[0], subject_id=subject_id, title=row[1], done=bool(row[2]), due_date=row[3]) for row in rows]
+def toggle_task_done(task_id, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     cur.execute("SELECT done FROM tasks WHERE id = ?", (task_id,))
     row = cur.fetchone()
@@ -60,8 +60,8 @@ def toggle_task_done(task_id):
     con.commit()
     con.close()
 
-def delete_task(task_id):
-    con = get_db_connection()
+def delete_task(task_id, db_name="todo.db"):
+    con = get_db_connection(db_name)
     cur = con.cursor()
     cur.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
     con.commit()
