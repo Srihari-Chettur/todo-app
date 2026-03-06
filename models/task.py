@@ -7,6 +7,5 @@ class Task:
     title: str
     subject_id: int
     done: bool
-    description: str
     subject_id: int
     due_date: Optional[str] = None
